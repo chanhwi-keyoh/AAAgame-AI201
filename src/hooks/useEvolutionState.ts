@@ -3,16 +3,17 @@ import type { PathId } from '../types';
 import { PATHS } from '../data/paths';
 
 const DEBOUNCE_MS = 60;
+const BASE = import.meta.env.BASE_URL;
 
 const EVOLUTION_SOUNDS: Record<string, string> = {
-  'human-to-zombie': '/sounds/human-to-zombie.mp3',
-  'human-to-tech': '/sounds/human-to-tech.mp3',
-  'human-to-beast': '/sounds/human-to-beast.mp3',
-  'human-to-evolution': '/sounds/human-to-evolution.mp3',
-  'zombie-to-human': '/sounds/zombie-to-human.mp3',
-  'tech-to-human': '/sounds/tech-to-human.mp3',
-  'beast-to-human': '/sounds/beast-to-human.mp3',
-  'evolution-to-human': '/sounds/evolution-to-human.mp3',
+  'human-to-zombie': `${BASE}sounds/human-to-zombie.mp3`,
+  'human-to-tech': `${BASE}sounds/human-to-tech.mp3`,
+  'human-to-beast': `${BASE}sounds/human-to-beast.mp3`,
+  'human-to-evolution': `${BASE}sounds/human-to-evolution.mp3`,
+  'zombie-to-human': `${BASE}sounds/zombie-to-human.mp3`,
+  'tech-to-human': `${BASE}sounds/tech-to-human.mp3`,
+  'beast-to-human': `${BASE}sounds/beast-to-human.mp3`,
+  'evolution-to-human': `${BASE}sounds/evolution-to-human.mp3`,
 };
 
 let currentAudio: HTMLAudioElement | null = null;
