@@ -46,7 +46,7 @@ export function useEvolutionState() {
   const [activePath, setActivePath] = useState<PathId>('human');
   const [lockedPath, setLockedPath] = useState<PathId>('human');
   const [evolveStage, setEvolveStage] = useState(0);
-  const [transitioning, setTransitioning] = useState(false);
+  const [, setTransitioning] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const activeRef = useRef<PathId>('human');
 
