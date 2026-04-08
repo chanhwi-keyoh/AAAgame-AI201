@@ -1,12 +1,17 @@
 import { motion } from 'framer-motion';
-import { EvolutionPath } from '../types';
+import type { EvolutionPath } from '../types';
 
 interface EvolutionTreeProps {
   path: EvolutionPath;
+  evolveStage: number;
+  canEvolve: boolean;
+  onEvolve: () => void;
 }
 
-export function EvolutionTree({ path }: EvolutionTreeProps) {
+export function EvolutionTree({ path, evolveStage, canEvolve, onEvolve }: EvolutionTreeProps) {
   const accent = path.colors.accent;
+  const stages = path.stages;
+  const activeUpTo = stages ? stages[evolveStage].treeUpTo : path.treeNodes.length - 1;
 
   return (
     <div className="flex flex-col items-center gap-0 p-6 h-full justify-center">
@@ -28,18 +33,46 @@ export function EvolutionTree({ path }: EvolutionTreeProps) {
         <ConnectorLine accent={accent} delay={0.1} />
 
         {/* Evolution stages */}
-        {path.treeNodes.map((label, i) => (
-          <div key={label} className="flex flex-col items-center">
-            {i > 0 && <ConnectorLine accent={accent} delay={0.1 + i * 0.1} />}
-            <TreeNode
-              label={label}
-              accent={accent}
-              delay={0.15 + i * 0.1}
-              isFinal={i === path.treeNodes.length - 1}
-            />
-          </div>
-        ))}
+        {path.treeNodes.map((label, i) => {
+          const isReached = i <= activeUpTo;
+          const isCurrent = i === activeUpTo;
+          const nodeAccent = isReached ? accent : '#444444';
+
+          return (
+            <div key={label} className="flex flex-col items-center">
+              {i > 0 && <ConnectorLine accent={nodeAccent} delay={0.1 + i * 0.1} />}
+              <TreeNode
+                label={label}
+                accent={nodeAccent}
+                delay={0.15 + i * 0.1}
+                isFinal={isCurrent}
+                dimmed={!isReached}
+              />
+            </div>
+          );
+        })}
       </div>
+
+      {/* Evolve button */}
+      {canEvolve && (
+        <motion.button
+          className="mt-8 px-5 py-2 rounded-lg text-sm uppercase tracking-[0.15em] font-medium cursor-pointer
+                     border transition-colors"
+          style={{
+            borderColor: accent,
+            color: accent,
+            backgroundColor: accent + '10',
+          }}
+          whileHover={{ scale: 1.05, backgroundColor: accent + '20' }}
+          whileTap={{ scale: 0.97 }}
+          onClick={onEvolve}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.4 }}
+        >
+          Evolve
+        </motion.button>
+      )}
     </div>
   );
 }
@@ -50,18 +83,20 @@ function TreeNode({
   delay,
   isOrigin,
   isFinal,
+  dimmed,
 }: {
   label: string;
   accent: string;
   delay: number;
   isOrigin?: boolean;
   isFinal?: boolean;
+  dimmed?: boolean;
 }) {
   return (
     <motion.div
       className="flex items-center gap-3"
       initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
+      animate={{ opacity: dimmed ? 0.35 : 1, y: 0 }}
       transition={{ duration: 0.3, ease: 'easeOut', delay }}
     >
       <motion.div

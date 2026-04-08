@@ -1,27 +1,34 @@
 import { motion } from 'framer-motion';
-import { PathId } from '../types';
+import type { PathId } from '../types';
 import { PATHS, SELECTABLE_PATHS } from '../data/paths';
 
 interface PathSelectorProps {
   activePath: PathId;
+  lockedPath: PathId;
   onHover: (id: PathId) => void;
   onLeave: () => void;
+  onClick: (id: PathId) => void;
 }
 
-export function PathSelector({ activePath, onHover, onLeave }: PathSelectorProps) {
+export function PathSelector({ activePath, lockedPath, onHover, onLeave, onClick }: PathSelectorProps) {
   return (
     <div className="flex justify-center gap-6 py-6 px-4">
       {SELECTABLE_PATHS.map((id) => {
         const path = PATHS[id];
         const isActive = activePath === id;
+        const isLocked = lockedPath === id;
 
         return (
           <motion.button
             key={id}
-            className="relative flex flex-col items-center gap-2 px-6 py-3 rounded-lg cursor-pointer
-                       bg-white/[0.03] border border-white/[0.06] transition-colors"
+            className={`relative flex flex-col items-center gap-2 px-6 py-3 rounded-lg cursor-pointer
+                       bg-white/[0.03] border transition-colors ${
+                         isLocked ? 'border-current' : 'border-white/[0.06]'
+                       }`}
+            style={isLocked ? { borderColor: path.colors.accent } : undefined}
             onMouseEnter={() => onHover(id)}
             onMouseLeave={onLeave}
+            onClick={() => onClick(id)}
             whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.2 }}
           >

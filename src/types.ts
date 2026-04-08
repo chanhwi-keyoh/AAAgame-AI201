@@ -19,4 +19,12 @@ export interface EvolutionPath {
     accent: string;
   };
   treeNodes: string[];
+  /** If present, defines evolution stages with separate images/stats */
+  stages?: {
+    image: string;
+    tagline: string;
+    stats: PathStats;
+    /** Index in treeNodes that this stage reaches (inclusive) */
+    treeUpTo: number;
+  }[];
 }

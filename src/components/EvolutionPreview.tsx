@@ -8,13 +8,17 @@ import { PathSelector } from './PathSelector';
 import { PATHS } from '../data/paths';
 
 export function EvolutionPreview() {
-  const { activePath, currentPath, selectPath, selectPathImmediate } = useEvolutionState();
+  const { activePath, lockedPath, currentPath, displayKey, evolveStage, canEvolve, selectPath, selectPathImmediate, lockPath, evolve } = useEvolutionState();
 
   // Preload all character images
   useEffect(() => {
     Object.values(PATHS).forEach((path) => {
       const img = new Image();
       img.src = path.image;
+      path.stages?.forEach((stage) => {
+        const stageImg = new Image();
+        stageImg.src = stage.image;
+      });
     });
   }, []);
 
@@ -37,19 +41,21 @@ export function EvolutionPreview() {
         </div>
 
         {/* Center: Character */}
-        <CharacterDisplay path={currentPath} />
+        <CharacterDisplay path={currentPath} displayKey={displayKey} />
 
         {/* Right: Evolution tree */}
         <div className="flex items-center">
-          <EvolutionTree path={currentPath} />
+          <EvolutionTree path={currentPath} evolveStage={evolveStage} canEvolve={canEvolve} onEvolve={evolve} />
         </div>
       </div>
 
       {/* Bottom: Path selector */}
       <PathSelector
         activePath={activePath}
+        lockedPath={lockedPath}
         onHover={selectPath}
-        onLeave={() => selectPathImmediate('human')}
+        onLeave={() => selectPathImmediate(lockedPath)}
+        onClick={lockPath}
       />
     </div>
   );

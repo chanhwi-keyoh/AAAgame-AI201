@@ -1,11 +1,12 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { EvolutionPath } from '../types';
+import type { EvolutionPath } from '../types';
 
 interface CharacterDisplayProps {
   path: EvolutionPath;
+  displayKey: string;
 }
 
-export function CharacterDisplay({ path }: CharacterDisplayProps) {
+export function CharacterDisplay({ path, displayKey }: CharacterDisplayProps) {
   return (
     <div className="relative flex items-center justify-center h-full w-full overflow-hidden">
       {/* Radial accent glow */}
@@ -20,7 +21,7 @@ export function CharacterDisplay({ path }: CharacterDisplayProps) {
       {/* Character image */}
       <AnimatePresence mode="popLayout">
         <motion.img
-          key={path.id}
+          key={displayKey}
           src={path.image}
           alt={path.label}
           className="absolute max-h-[70vh] max-w-full object-contain drop-shadow-lg"
@@ -37,7 +38,7 @@ export function CharacterDisplay({ path }: CharacterDisplayProps) {
       {/* Tagline */}
       <AnimatePresence mode="wait">
         <motion.p
-          key={path.id + '-tagline'}
+          key={displayKey + '-tagline'}
           className="absolute bottom-8 text-lg italic tracking-wide"
           style={{ color: path.colors.accent + '99' }}
           initial={{ opacity: 0, y: 10 }}

@@ -1,4 +1,4 @@
-import { EvolutionPath } from '../types';
+import type { EvolutionPath } from '../types';
 import { StatBar } from './StatBar';
 
 interface StatusPanelProps {
